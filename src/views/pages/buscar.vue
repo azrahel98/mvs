@@ -27,7 +27,7 @@
 		</div>
 		<div class="page-body">
 			<div class="container-xl">
-				<div class="row row-cards">
+				<div class="row row-cards justify-content-center">
 					<CardEmploy
 						@change="changeEmploy"
 						v-for="x in (resultEmplys as EmpleadoVw[])"

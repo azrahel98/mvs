@@ -11,8 +11,15 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="staticBackdropLabel">{{ prop.nombre }}</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<h1 class="modal-title fs-5" id="staticBackdropLabel">
+						{{ prop.nombre }}
+					</h1>
+					<button
+						type="button"
+						class="btn-close"
+						data-bs-dismiss="modal"
+						aria-label="Close"
+					></button>
 				</div>
 				<div class="modal-body">
 					<div class="main">
@@ -68,8 +75,12 @@
 						<ul>
 							<div v-for="(x, i) in store.list" class="list">
 								<li>{{ x }}</li>
-								<button type="submit" class="btn btn-danger text-center mt-1" @click="quitarItem(i)">
-									<span class="material-icons-outlined"> add_circle </span>
+								<button
+									type="submit"
+									class="btn btn-danger text-center mt-1 btn-sm"
+									@click="quitarItem(i)"
+								>
+									<span class="material-icons-outlined"> remove_circle </span>
 								</button>
 							</div>
 						</ul>
@@ -92,7 +103,14 @@
 </template>
 
 <script lang="ts" setup>
-	import { onMounted, reactive, watchEffect, ref, watch } from 'vue'
+	import {
+		onMounted,
+		reactive,
+		watchEffect,
+		ref,
+		watch,
+		onUnmounted,
+	} from 'vue'
 	import ItemDoc from '../modals/item/item.vue'
 	import { Documento } from '../../../app/models/documentos'
 	import { buscarDoc, Guardar } from '../../../app/documentos'
@@ -114,7 +132,9 @@
 	onMounted(() => {
 		store.dni = prop.dni as string
 	})
-
+	onUnmounted(() => {
+		store.$reset()
+	})
 	watch(prop, (_x, _xs) => {
 		disableDoc.value = false
 		documento.docId = null

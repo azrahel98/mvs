@@ -3,7 +3,11 @@
 		<form class="item" @submit.prevent="add">
 			<div class="referencia">
 				<div class="input-group mb-3">
-					<select class="form-select" aria-label="Default select example" v-model="documentdetalle.asunto">
+					<select
+						class="form-select"
+						aria-label="Default select example"
+						v-model="documentdetalle.asunto"
+					>
 						<option selected value="DF">DF</option>
 						<option value="HORASEXTRAS">HORASEXTRAS</option>
 						<option value="ONOMASTICO">ONOMASTICO</option>
@@ -47,8 +51,12 @@
 				/>
 			</div>
 			<div class="descripcion">
-				<div class="input-group mb-3" v-if="!isrange && store.document.tipo !== 'PAPELETA'">
-					<v-date-picker v-model="daterange" mode="date" is-range> </v-date-picker>
+				<div
+					class="input-group mb-3"
+					v-if="!isrange && store.document.tipo !== 'PAPELETA'"
+				>
+					<v-date-picker v-model="daterange" mode="date" is-range>
+					</v-date-picker>
 				</div>
 				<div class="input-group">
 					<textarea
@@ -94,8 +102,12 @@
 
 	const add = () => {
 		if (!isrange.value) {
-			documentdetalle.value.inicio = moment(daterange.value.start).format('YYYY-MM-DD')
-			documentdetalle.value.fin = moment(daterange.value.end).format('YYYY-MM-DD')
+			documentdetalle.value.inicio = moment(daterange.value.start).format(
+				'YYYY-MM-DD'
+			)
+			documentdetalle.value.fin = moment(daterange.value.end).format(
+				'YYYY-MM-DD'
+			)
 			documentdetalle.value.fecha = null
 		}
 		documentdetalle.value.dni = store.dni

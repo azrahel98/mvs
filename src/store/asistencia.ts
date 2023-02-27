@@ -1,7 +1,21 @@
 import { defineStore } from "pinia"
+import {  Marcaciones } from '../../app/models/empleado'
+import {  buscarRegistros } from '../../app/asistencia'
 
-export const employAsists = defineStore('employAsist', {
-    state: () => ({ docs:{} }),
+export const calendarStore = defineStore('calendarStore', {
+    state: () => ({ 
+      regis:{
+        registros:[],
+        doc:[],
+        ranges:[]
+      } as unknown as Marcaciones,
+      newdoc:{} as any
+      }),
+    actions:{
+      async agregar(dni:string,mes:number,year:number) {
+        this.$state.regis = await buscarRegistros(dni,mes,year)
+      }
+    }
     // actions: {
     //   addDoc(item:DetalleDocumentos) {
     //     if (this.document.tipo == 'PAPELETA') {

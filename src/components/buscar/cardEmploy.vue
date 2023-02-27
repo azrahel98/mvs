@@ -2,11 +2,20 @@
 	<div class="col-md-4 col-sm-4 col-lg-2">
 		<div class="card">
 			<div class="card-body p-4 text-center">
-				<span class="avatar avatar-xl mb-3 avatar-rounded">{{ formatAPAName(prop.empleado.nombre) }}</span>
+				<span class="avatar avatar-xl mb-3 avatar-rounded">{{
+					formatAPAName(prop.empleado.nombre)
+				}}</span>
 
 				<h3 class="m-0 mb-1">
 					<RouterLink
-				 		:to="{ path: `/cal/${prop.empleado.dni}/1/2023`, params: { dni: prop.empleado.dni, mes: 1, year: 2023 } }"
+						:to="{
+							name: 'calendar',
+							params: {
+								dni: prop.empleado.dni,
+								mes: new Date().getMonth() + 1,
+								year: new Date().getFullYear(),
+							},
+						}"
 						class="m-0 mb-1"
 						><a>{{ prop.empleado.nombre }}</a></RouterLink
 					>
@@ -14,7 +23,12 @@
 				<div class="text-muted">{{ prop.empleado.area }}</div>
 			</div>
 			<div class="d-flex">
-				<a class="card-btn" data-bs-toggle="modal" data-bs-target="#staticBackdropD" @click="click">
+				<a
+					class="card-btn"
+					data-bs-toggle="modal"
+					data-bs-target="#staticBackdropD"
+					@click="click"
+				>
 					<script-plus-icon class="text-muted" />
 				</a>
 			</div>

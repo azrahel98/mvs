@@ -1,16 +1,18 @@
 <template>
-	<div id="report-calendar" ref="report-calendar">
-		<CardEmploy
-			v-if="!isLoading"
-			:area="employ?.area == undefined ? 'cargando ..' : employ.area.toString()"
-			:dni="employ?.dni == undefined ? 'cargando .. ' : employ.dni"
-			:cargo="employ?.cargo == undefined ? 'cargo' : employ.cargo.toString()"
-			:nombre="employ?.nombre == undefined ? 'cargando ..' : employ.nombre"
-		></CardEmploy>
-		<Loading v-else></Loading>
-
+	<div id="calendario">
 		<div class="container-xl">
 			<div class="page-body">
+				<CardEmploy
+					:area="
+						employ?.area == undefined ? 'cargando ..' : employ.area.toString()
+					"
+					:dni="employ?.dni == undefined ? 'cargando .. ' : employ.dni"
+					:cargo="
+						employ?.cargo == undefined ? 'cargo' : employ.cargo.toString()
+					"
+					:nombre="employ?.nombre == undefined ? 'cargando ..' : employ.nombre"
+				></CardEmploy>
+
 				<div class="card main">
 					<div class="calendar-tools">
 						<div class="d-flex flex-column flex-lg-row text-center">
@@ -35,9 +37,17 @@
 							>
 						</div>
 						<div class="d-flex justify-content-between bt gap-4">
-							<button class="btn btn-pill bg-primary-lt" style="">
+							<button
+								class="btn btn-pill bg-primary-lt"
+								data-bs-toggle="modal"
+								data-bs-target="#staticBackdropD"
+							>
 								Añadir
 							</button>
+							<ModalAdd
+								:dni="employ?.dni == null ? 'cargando' : employ?.dni"
+								:nombre="employ?.nombre == null ? 'cargando' : employ?.nombre"
+							/>
 						</div>
 					</div>
 					<div class="calendario">
@@ -60,7 +70,7 @@
 										? 6
 										: new Date(`${dateInfo.year}-${dateInfo.mes}-1`).getDay() -
 										  1"
-								></div>
+								/>
 
 								<div
 									v-for="x in moment(
@@ -68,26 +78,11 @@
 										'YYYY-MM-DD'
 									).daysInMonth()"
 								>
-									<DiaFalta
-										v-if="regis?.registros.filter((e:any) => moment(e.date).date() == x).length == 0 && regis?.doc.filter((e:any) => moment(e.fecha).date() == x ).length == 0 && regis?.ranges.filter((e:any) => moment(`${dateInfo.year}-${dateInfo.mes}-${x}`).isBetween(moment(e.inicio),moment(e.fin),null,'[]') ).length == 0"
-										:dia="x"
-									>
-									</DiaFalta>
-									<DiaSinDocs
-										v-else-if="regis?.registros && regis?.doc.filter((e:any) => moment(e.fecha).date() == x ).length == 0 && regis?.ranges.filter((e:any) => moment(`${dateInfo.year}-${dateInfo.mes}-${x}`).isBetween(moment(e.inicio),moment(e.fin),null,'[]') ).length == 0"
-										:dia="x"
-										:registro="regis?.registros.find((e:any) => moment(e.date).date() == x)"
-										:docs="regis?.doc.filter((e:any) => moment(e.fecha).date() == x )"
-										:range="regis?.ranges.filter((e:any) => moment(`${dateInfo.year}-${dateInfo.mes}-${x}`).isBetween(moment(e.inicio),moment(e.fin),null,'[]') )"
-									>
-									</DiaSinDocs>
-
 									<CardDia
-										v-else
 										:dia="x"
-										:registro="regis?.registros.find((e:any) => moment(e.date).date() == x)"
-										:docs="regis?.doc.filter((e:any) => moment(e.fecha).date() == x )"
-										:range="regis?.ranges.filter((e:any) => moment(`${dateInfo.year}-${dateInfo.mes}-${x}`).isBetween(moment(e.inicio),moment(e.fin),null,'[]') )"
+										:registro="calstore.regis?.registros.find((e:any) => moment(e.date).date() == x)"
+										:docs="calstore.regis?.doc.filter((e:any) => moment(e.fecha).date() == x )"
+										:range="calstore.regis?.ranges.filter((e:any) => moment(`${dateInfo.year}-${dateInfo.mes}-${x}`).isBetween(moment(e.inicio),moment(e.fin),null,'[]') )"
 									/>
 								</div>
 							</div>
@@ -101,21 +96,18 @@
 </template>
 
 <script lang="ts" setup>
-	import { onMounted, ref, watch } from 'vue'
+	import { onMounted, ref, watch, onUnmounted } from 'vue'
 	import { router } from '../../routers'
 	import { BuscarBydni } from '../../../app/employ'
-	import { getMonthName, buscarRegistros } from '../../../app/asistencia'
+	import { getMonthName } from '../../../app/asistencia'
 	import Loading from '../../components/loading/loading.vue'
 	import CardEmploy from '../../components/calendario/employ.vue'
-	import { Empleado, Marcaciones } from '../../../app/models/empleado'
+	import { Empleado } from '../../../app/models/empleado'
 	import CardDia from '../../components/calendario/dia.vue'
-
-	import DiaFalta from '../../components/calendario/dia/falta.vue'
-	import DiaSinDocs from '../../components/calendario/dia/normal.vue'
+	import { calendarStore } from '../../store/asistencia'
+	import ModalAdd from '../../components/modals/doc.vue'
 
 	import moment from 'moment'
-
-	const regis = ref<Marcaciones>()
 
 	const isLoading = ref(false)
 	const dni = router.currentRoute.value.params as any
@@ -126,15 +118,17 @@
 		year: <number>parseInt(dni.year),
 	})
 
+	const calstore = calendarStore()
+
 	onMounted(async () => {
 		isLoading.value = true
 		employ.value = await BuscarBydni(dni.dni)
-		regis.value = await buscarRegistros(
-			dni.dni,
-			parseInt(dni.mes),
-			parseInt(dni.year)
-		)
+		calstore.agregar(dni.dni, parseInt(dni.mes), parseInt(dni.year))
 		isLoading.value = false
+	})
+
+	onUnmounted(() => {
+		calstore.$reset()
 	})
 
 	const siguiente = () => {
@@ -158,11 +152,7 @@
 	watch(dateInfo.value, async (r, x) => {
 		try {
 			isLoading.value = true
-			regis.value = await buscarRegistros(
-				dni.dni,
-				dateInfo.value.mes,
-				parseInt(dateInfo.value.year)
-			)
+			calstore.agregar(dni.dni, r.mes, parseInt(r.year))
 			await router.replace({
 				params: { dni: dni.dni, mes: parseInt(r.mes), year: r.year },
 			})

@@ -64,7 +64,7 @@
 				.name {
 					align-self: center;
 					display: flex;
-					justify-content: space-between;
+					justify-content: space-around;
 					gap: 1vh;
 					align-items: center;
 					h3 {

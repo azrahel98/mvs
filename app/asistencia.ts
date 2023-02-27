@@ -27,7 +27,7 @@ function getMonthName(mes: number) {
 		'Abril',
 		'Mayo',
 		'Junio',
-		'Julop',
+		'Julio',
 		'Agosto',
 		'Septiembre',
 		'Octobre',
