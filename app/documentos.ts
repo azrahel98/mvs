@@ -12,6 +12,28 @@ async function buscarDoc(nombres: string): Promise<Documento> {
 	}
 }
 
+async function buscarDocByName(nombres: string): Promise<Documento> {
+	try {
+		const data = await ApiClient.post<any>('/doc/searchByName', {
+			nombre: nombres,
+		})
+		return data
+	} catch (error) {
+		throw error
+	}
+}
+
+async function buscardDetallesDocumentos(id: number): Promise<Documento> {
+	try {
+		const data = await ApiClient.post<any>('/doc/searchDetalle', {
+			id,
+		})
+		return data
+	} catch (error) {
+		throw error
+	}
+}
+
 async function Guardar(doc: Documento, detalle: DetalleDocumentos[]) {
 	try {
 		const data = await ApiClient.post<Documento>('/doc/create', {
@@ -95,4 +117,10 @@ function AbrevAsuntos(asunto: string) {
 	}
 }
 
-export { buscarDoc, Guardar, AbrevAsuntos }
+export {
+	buscarDoc,
+	Guardar,
+	AbrevAsuntos,
+	buscarDocByName,
+	buscardDetallesDocumentos,
+}

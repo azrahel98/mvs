@@ -175,6 +175,12 @@
 									<span class="nav-link-title"> Buscar </span>
 								</a>
 							</RouterLink>
+							<RouterLink to="/doc" tag="li" class="nav-item">
+								<a class="nav-link">
+									<user-search-icon />
+									<span class="nav-link-title"> Docs </span>
+								</a>
+							</RouterLink>
 						</ul>
 					</div>
 				</div>

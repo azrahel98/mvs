@@ -29,7 +29,6 @@
 						placeholder="Referencia"
 						v-model="documentdetalle.referencia"
 						aria-label="Referencia"
-						required
 					/>
 				</div>
 			</div>

@@ -22,7 +22,7 @@
 				</h3>
 				<div class="text-muted">{{ prop.empleado.area }}</div>
 			</div>
-			<div class="d-flex">
+			<div class="d-flex" v-if="adminstore.admin">
 				<a
 					class="card-btn"
 					data-bs-toggle="modal"
@@ -38,8 +38,10 @@
 
 <script lang="ts" setup>
 	import { userDocsUpload } from '../../store/doc'
+	import { adminStore } from '../../store/user'
 
 	const store = userDocsUpload()
+	const adminstore = adminStore()
 
 	const prop = defineProps({
 		empleado: { type: Object, required: true },

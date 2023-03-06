@@ -41,8 +41,6 @@
 									v-model="documento.tipo"
 									:disabled="disableDoc"
 								>
-									<!-- 'DOC-ADM', 'MEMORANDO', 'SOLICITUD', 'DESCANSO MEDICO', 'INFORME', 'RESOLUCION', 'CARTA', 'OFICIO',
-									'PAPELETA', 'RENUNCIA' -->
 									<option selected value="MEMORANDO">MEMORANDO</option>
 									<option value="DOC-ADM">DOC-ADM</option>
 									<option value="SOLICITUD">SOLICITUD</option>
