@@ -11,11 +11,16 @@
 				<div class="modal-body">
 					<div class="card">
 						<div class="ribbon ribbon-top bg-yellow">
-							<!-- {{ (prop.doc as any).asunto }} -->
 							<checkbox-icon />
 						</div>
 						<div class="card-body">
-							<h3 class="card-title">{{ (prop.doc as any).asunto }}</h3>
+							<h3 class="card-title" data-bs-dismiss="modal">
+								{{ (prop.doc as any).asunto }} -
+								<RouterLink
+									:to="{name:'doc_search',params:{id:(prop.doc as any).doc}}"
+									>{{ (prop.doc as any).doc }}</RouterLink
+								>
+							</h3>
 							<p class="text-muted">
 								{{ (prop.doc as any).descripcion }}
 							</p>

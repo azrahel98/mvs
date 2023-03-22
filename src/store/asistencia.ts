@@ -21,6 +21,7 @@ export const calendarStore = defineStore('calendarStore', {
 			ranges: [],
 		} as unknown as Marcaciones,
 		asistencia: [] as Array<registro>,
+		saved: true as boolean,
 	}),
 	actions: {
 		async agregar(dni: string, mes: number, year: number) {
@@ -70,6 +71,7 @@ export const calendarStore = defineStore('calendarStore', {
 					e.tardanza
 				)
 			})
+			this.$state.saved = true
 		},
 	},
 	getters: {

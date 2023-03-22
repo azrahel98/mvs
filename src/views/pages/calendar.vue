@@ -49,7 +49,10 @@
 									Añadir
 								</button>
 								<button
-									class="btn btn-pill bg-primary-lt"
+									class="btn btn-pill"
+									:class="[
+										calstore.saved ? 'bg-primary-lt' : 'bg-danger text-white',
+									]"
 									@click="calstore.guardarAsistencia"
 								>
 									Reloj
@@ -91,7 +94,6 @@
 									>
 										<CardDia
 											:dia="x"
-											:saved="calstore.asistencia.find((e:any) => moment(e.fecha).date() == x) ? true:false"
 											:registro="calstore.regis?.registros.find((e:any) => moment(e.date).date() == x)"
 											:docs="calstore.regis?.doc.filter((e:any) => moment(e.fecha).date() == x )"
 											:range="calstore.regis?.ranges.filter((e:any) => moment(`${dateInfo.year}-${dateInfo.mes}-${x}`).isBetween(moment(e.inicio),moment(e.fin),null,'[]') )"
@@ -104,7 +106,7 @@
 					</div>
 
 					<div
-						class="card registros col-lg-auto col-md-2 col-sm-12"
+						class="card registros col-lg-auto col-md-6 col-sm-12"
 						v-if="calstore.asistencia.length > 0"
 					>
 						<div class="table-responsive">
@@ -131,7 +133,9 @@
 										<td>
 											{{ (x as any).fecha }}
 										</td>
-										<td style="">{{ (x as any).tardanza }}</td>
+										<td v-if="(x as any).falta != true">
+											{{ (x as any).tardanza }}
+										</td>
 									</tr>
 								</tbody>
 								<tfoot>

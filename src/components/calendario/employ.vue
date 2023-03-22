@@ -62,14 +62,16 @@
 				grid-template-rows: auto min-content;
 				row-gap: 2vh;
 				.name {
-					align-self: center;
-					display: flex;
-					justify-content: space-around;
-					gap: 1vh;
-					align-items: center;
 					h3 {
 						display: flex;
 						flex-direction: column;
+						justify-content: center;
+						align-items: center;
+						a {
+							text-align: center;
+							width: auto;
+							min-width: min-content;
+						}
 					}
 					.avatar {
 						justify-self: center;

@@ -2,13 +2,11 @@
 	<div
 		class="card"
 		:class="[
-			new Date(`${params.mes}/${prop.dia}/${params.year}`).getDay() == 6 ||
-			new Date(`${params.mes}/${prop.dia}/${params.year}`).getDay() == 0
-				? 'bg-facebook-lt'
-				: '',
-			registro ? '' : 'bg-warning-lt',
 			docs!.length > 0 && !registro ? `${AbrevAsuntos((docs![0] as any).asunto).bg}` : '',
-			range!.length > 0 && docs ? `${AbrevAsuntos((range![0] as any).asunto).bg}`:''
+			range!.length > 0 && docs ? `${AbrevAsuntos((range![0] as any).asunto).bg}`:'',
+			store.asistencia.find((x) => moment(x.fecha).date() == prop.dia )?.falta ? 'bg-danger bg-gradient':'',
+			store.asistencia.find((x) => moment(x.fecha).date() == prop.dia )?.tardanza ? 'bg-warning-lt bg-gradient':'',
+			registro ? '' : 'bg-warning-lt',
 		]"
 	>
 		<h2 class="text-dark">{{ prop.dia }}</h2>
@@ -77,10 +75,7 @@
 					class="form-control"
 					@change="changed"
 					v-model="asitencia.tardanza"
-					:class="[
-						asitencia.saved ? 'is-valid' : '',
-						prop.saved == true ? 'is-valid' : '',
-					]"
+					:class="[asitencia.saved ? 'is-valid' : '']"
 					@keyup.enter="save"
 				/>
 			</div>
@@ -89,6 +84,7 @@
 </template>
 
 <script lang="ts" setup>
+	import moment from 'moment'
 	import { reactive } from 'vue'
 	import { AbrevAsuntos } from '../../../app/documentos'
 	import ModalCal from '../../components/calendario/modal.vue'
@@ -101,7 +97,6 @@
 		registro: { type: Object },
 		docs: { type: Array },
 		range: { type: Array },
-		saved: { type: Boolean, required: true },
 	})
 
 	const store = calendarStore()
@@ -113,15 +108,15 @@
 		falta: false,
 		fecha: `${params.year}-${params.mes}-${prop.dia}`,
 		tardanza: null,
-		saved: prop.saved,
 		dni: params.dni,
 	})
 
 	const changed = (e: any) => {
 		if (asitencia.falta) {
 			asitencia.tardanza = null
+			return
 		}
-		asitencia.saved = false
+		store.saved = false
 	}
 
 	const save = () => {

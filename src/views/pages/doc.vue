@@ -1,5 +1,68 @@
 <template>
 	<div>
+		<div class="container-xl">
+			<div class="page-header d-print-none">
+				<div class="row">
+					<div class="col-auto">
+						<h2 class="page-title">Documentos</h2>
+					</div>
+					<div class="col-auto">
+						<div class="d-flex">
+							<div class="input-group">
+								<span class="input-group-text"><file-code-icon /></span>
+								<input
+									type="text"
+									aria-label="First name"
+									class="form-control"
+									v-model="dni"
+									placeholder="DNI"
+									v-on:keyup.enter="buscar"
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="page-body">
+			<div class="container-xl">
+				<div class="row row-cards justify-content-center">
+					<cardDoc v-for="x in result" :doc="x" />
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script lang="ts" setup>
+	import { ref } from 'vue'
+	import cardDoc from '../../components/doc/doc_card.vue'
+	import { buscarDocumentosDNI, buscarDocByName } from '../../../app/documentos'
+
+	const dni = ref<string>()
+
+	const result = ref<Array<Object>>([])
+
+	const buscar = async () => {
+		try {
+			if (dni.value) result.value = await buscarDocumentosDNI(dni.value)
+		} catch (error) {
+			result.value = []
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.row {
+		align-content: center;
+		justify-content: space-around;
+		justify-items: center;
+		align-items: center;
+	}
+</style>
+
+<!-- <template>
+	<div>
 		<div class="page-header d-print-none">
 			<div class="container-xl">
 				<div class="row g-2 align-items-center">
@@ -163,4 +226,4 @@
 		height: min-content;
 		gap: 1vh;
 	}
-</style>
+</style> -->

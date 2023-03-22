@@ -23,7 +23,18 @@ async function buscarDocByName(nombres: string): Promise<Documento> {
 	}
 }
 
-async function buscardDetallesDocumentos(id: number): Promise<Documento> {
+async function buscarDocumentosDNI(dni: string): Promise<Array<Object>> {
+	try {
+		const data = await ApiClient.post<any>('/doc/searchByDni', {
+			dni: dni,
+		})
+		return data
+	} catch (error) {
+		throw error
+	}
+}
+
+async function buscardDetallesDocumentos(id: number): Promise<Documento[]> {
 	try {
 		const data = await ApiClient.post<any>('/doc/searchDetalle', {
 			id,
@@ -43,6 +54,16 @@ async function Guardar(doc: Documento, detalle: DetalleDocumentos[]) {
 		toast(`${data.docId}`, { autoClose: 600 })
 	} catch (error) {
 		toast(error as string, { autoClose: 600 })
+	}
+}
+async function BuscarById(id: string): Promise<Object> {
+	try {
+		const data = await ApiClient.post<Array<any>>('/doc/searchById', {
+			id,
+		})
+		return data[0]
+	} catch (error) {
+		throw error
 	}
 }
 
@@ -123,4 +144,6 @@ export {
 	AbrevAsuntos,
 	buscarDocByName,
 	buscardDetallesDocumentos,
+	buscarDocumentosDNI,
+	BuscarById,
 }
