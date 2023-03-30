@@ -17,7 +17,12 @@
 							},
 						}"
 						class="m-0 mb-1"
-						><a>{{ prop.empleado.nombre }}</a></RouterLink
+						><a
+							><span
+								class="status-dot status-dot-animated bg-red d-block"
+								v-if="prop.empleado.activo == 1"
+							/>{{ prop.empleado.nombre }}</a
+						></RouterLink
 					>
 				</h3>
 				<div class="text-muted">{{ prop.empleado.area }}</div>

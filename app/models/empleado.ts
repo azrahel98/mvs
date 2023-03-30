@@ -4,6 +4,7 @@ export interface EmpleadoVw {
 	ingreso?: string | null
 	area?: string | null
 	cargo?: string | null
+	activo?: number | null
 }
 
 export interface Empleado {

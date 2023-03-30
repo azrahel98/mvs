@@ -10,7 +10,18 @@
 							moment(prop.doc['fecha']).format('YYYY-MM-DD')
 						}}
 					</span>
-					<span class="fs-5 fw-bold">{{ prop.doc['nombre'] }}</span>
+					<RouterLink
+						:to="{
+							name: 'doc_search',
+							params: {
+								id: prop.doc['docId'],
+							},
+						}"
+					>
+						<span class="fs-5 fw-bold">{{
+							prop.doc['nombre']
+						}}</span></RouterLink
+					>
 				</div>
 			</div>
 		</div>

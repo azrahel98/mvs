@@ -3,43 +3,37 @@
 		<div class="container-xl">
 			<div class="card card-lg">
 				<div class="card-body">
-					<div class="row">
+					<div class="row p-0 m-0 justify-content-between gap-0">
 						<div class="col-6">
 							<p class="h3">Municipalidad de Villa El Salvador</p>
-							<address>
-								Cruce De Av. Revolución Con Av. Vallejo,<br />
-								Villa El Salvador, 42, Peru, Villa El Salvador, Peru 2765
-							</address>
 						</div>
 						<div class="col-6 text-end">
-							<p class="h3">{{ doc['tipo'] }}</p>
+							<p class="h3"># {{ doc['nombre'] }}</p>
 							<address>
-								{{ doc['fecha'] }} <br />
+								<calendar-icon /> {{ doc['fecha'] }} <br />
 								{{ doc['docId'] }}
 							</address>
 						</div>
-						<div class="col-12 my-5">
-							<h1>{{ doc['nombre'] }}</h1>
+						<div class="col-12">
+							<h1>{{ doc['tipo'] }}</h1>
 						</div>
 					</div>
 					<table class="table table-transparent table-responsive">
 						<thead>
 							<tr>
-								<th class="text-center" style="width: 1%"></th>
 								<th>Nombre</th>
-								<th class="text-center" style="width: 8%">Asunto</th>
-								<th class="text-center" style="width: 15%">Fecha</th>
-								<th class="text-end" style="width: 1%">Id</th>
+								<th class="text-center">Asunto</th>
+								<th class="text-center">Fecha</th>
+								<th class="text-center">Id</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="(y, x) in detalles">
-								<td class="text-center">{{ x + 1 }}</td>
+							<tr v-for="y in detalles">
 								<td>
 									<p class="strong mb-1">{{ y['nombre'] }}</p>
 									<div class="text-muted">{{ y['descripcion'] }}</div>
 								</td>
-								<td class="text-center">{{ y['asunto'] }}</td>
+								<td class="text-center text-break">{{ y['asunto'] }}</td>
 								<td class="text-center" v-if="moment(y['fecha']).isValid()">
 									{{ y['fecha'] }}
 								</td>
@@ -55,7 +49,7 @@
 										{{ moment(y['fin']).add({ day: 1 }).format('YYYY-MM-DD') }}
 									</div>
 								</td>
-								<td class="text-end">{{ y['idDetalle'] }}</td>
+								<td class="text-center">{{ y['idDetalle'] }}</td>
 							</tr>
 						</tbody>
 					</table>

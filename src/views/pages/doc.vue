@@ -7,15 +7,24 @@
 						<h2 class="page-title">Documentos</h2>
 					</div>
 					<div class="col-auto">
-						<div class="d-flex">
+						<div class="d-flex gap-4">
 							<div class="input-group">
 								<span class="input-group-text"><file-code-icon /></span>
 								<input
 									type="text"
-									aria-label="First name"
 									class="form-control"
 									v-model="dni"
 									placeholder="DNI"
+									v-on:keyup.enter="buscar"
+								/>
+							</div>
+							<div class="input-group">
+								<span class="input-group-text"><file-code-icon /></span>
+								<input
+									type="text"
+									class="form-control"
+									placeholder="Nombre"
+									v-model="doc"
 									v-on:keyup.enter="buscar"
 								/>
 							</div>
@@ -40,12 +49,17 @@
 	import { buscarDocumentosDNI, buscarDocByName } from '../../../app/documentos'
 
 	const dni = ref<string>()
+	const doc = ref<string>()
 
 	const result = ref<Array<Object>>([])
 
 	const buscar = async () => {
 		try {
-			if (dni.value) result.value = await buscarDocumentosDNI(dni.value)
+			if (dni.value) {
+				result.value = await buscarDocumentosDNI(dni.value)
+			} else if (doc.value) {
+				result.value = (await buscarDocByName(doc.value)) as any
+			}
 		} catch (error) {
 			result.value = []
 		}

@@ -82,12 +82,15 @@
 					}
 				}
 				.info {
-					display: flex;
-					flex-direction: column;
-					gap: 1vh;
+					display: grid;
+					grid-template-rows: 1fr 1fr;
+					justify-content: center;
+					row-gap: 2vh;
 					font-weight: 500;
 					font-size: 0.7rem;
-					width: 100%;
+					div {
+						max-width: 27vh;
+					}
 				}
 			}
 		}
