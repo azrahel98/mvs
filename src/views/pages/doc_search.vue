@@ -29,12 +29,24 @@
 						</thead>
 						<tbody>
 							<tr v-for="y in detalles">
-								<td>
-									<p class="strong mb-1">{{ y['nombre'] }}</p>
+								<td style="width: 20%">
+									<p class="strong mb-1">
+										{{ y['nombre'] }}
+										<span
+											class="status-dot"
+											:class="[y['activo'] == 0 ? 'bg-green' : 'bg-danger']"
+										/>
+									</p>
 									<div class="text-muted">{{ y['descripcion'] }}</div>
 								</td>
-								<td class="text-center text-break">{{ y['asunto'] }}</td>
-								<td class="text-center" v-if="moment(y['fecha']).isValid()">
+								<td class="text-center text-break" style="width: 15%">
+									{{ y['asunto'] }}
+								</td>
+								<td
+									class="text-center"
+									v-if="moment(y['fecha']).isValid()"
+									style="width: 15%"
+								>
 									{{ y['fecha'] }}
 								</td>
 								<td class="text-center" v-else>
@@ -49,7 +61,26 @@
 										{{ moment(y['fin']).add({ day: 1 }).format('YYYY-MM-DD') }}
 									</div>
 								</td>
-								<td class="text-center">{{ y['idDetalle'] }}</td>
+								<td class="text-center" style="width: 15%">
+									{{ y['idDetalle'] }}
+								</td>
+								<td style="width: 5%">
+									<button
+										v-if="admin.admin"
+										v-show="y['activo'] == 0"
+										class="btn rounded bg-danger-lt text-twitter"
+										@click="anular(y)"
+									>
+										Anular
+									</button>
+									<button
+										v-if="admin.admin"
+										class="btn rounded bg-danger-lt text-youtube"
+										@click="eliminar(y)"
+									>
+										<trash-icon />
+									</button>
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -65,12 +96,15 @@
 	import {
 		BuscarById,
 		buscardDetallesDocumentos,
+		AnularById,
+		EliminarDetalleById,
 	} from '../../../app/documentos'
-	import { Documento } from '../../../app/models/documentos'
 	import moment from 'moment'
+	import { adminStore } from '../../store/user'
 
 	const doc = ref<any>({})
 	const detalles = ref<Array<any>>([])
+	const admin = adminStore()
 
 	onMounted(async () => {
 		doc.value = await BuscarById(router.currentRoute.value.params.id as string)
@@ -79,4 +113,12 @@
 			router.currentRoute.value.params.id as any
 		)
 	})
+
+	const anular = (y: any) => {
+		AnularById(y['idDetalle'])
+		y['activo'] = 1
+	}
+	const eliminar = async (y: any) => {
+		await EliminarDetalleById(y['idDetalle'])
+	}
 </script>

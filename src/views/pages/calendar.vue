@@ -14,7 +14,7 @@
 				></CardEmploy>
 
 				<div class="row">
-					<div class="card main col-lg-10 col-md-10 col-sm-12">
+					<div class="card main col-lg-8 col-md-8 col-sm-12">
 						<div class="calendar-tools">
 							<div class="d-flex flex-column flex-lg-row text-center">
 								<div class="my-2 me-2 my-lg-0 d-flex justify-content-center">
@@ -106,7 +106,7 @@
 					</div>
 
 					<div
-						class="card registros col-lg-auto col-md-6 col-sm-12"
+						class="card registros col-lg-auto col-md-auto col-sm-12"
 						v-if="calstore.asistencia.length > 0"
 					>
 						<div class="table-responsive">
@@ -116,6 +116,7 @@
 										<th>F</th>
 										<th>Fecha</th>
 										<th>T</th>
+										<th></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -135,6 +136,14 @@
 										</td>
 										<td v-if="(x as any).falta != true">
 											{{ (x as any).tardanza }}
+										</td>
+										<td v-if="adstore.admin">
+											<button
+												class="btn btn-outline-youtube btn-sm text-center"
+												@click="eliminarRegistroa(x)"
+											>
+												<trash-icon />
+											</button>
 										</td>
 									</tr>
 								</tbody>
@@ -163,7 +172,7 @@
 	import { onMounted, ref, watch, onUnmounted } from 'vue'
 	import { router } from '../../routers'
 	import { BuscarBydni } from '../../../app/employ'
-	import { getMonthName } from '../../../app/asistencia'
+	import { getMonthName, EliminarAsistencia } from '../../../app/asistencia'
 	import Loading from '../../components/loading/loading.vue'
 	import CardEmploy from '../../components/calendario/employ.vue'
 	import { Empleado } from '../../../app/models/empleado'
@@ -173,6 +182,7 @@
 
 	import moment from 'moment'
 	import { adminStore } from '../../store/user'
+	import { onBeforeRouteLeave } from 'vue-router'
 
 	const isLoading = ref(false)
 	const dni = router.currentRoute.value.params as any
@@ -198,20 +208,46 @@
 	})
 
 	const siguiente = () => {
-		if (dateInfo.value.mes == 12) {
-			dateInfo.value.mes = 1
-			dateInfo.value.year = dateInfo.value.year + 1
+		if (!calstore.saved) {
+			let data = confirm('Estas seguro de salir sin guardar')
+			if (data) {
+				calstore.$reset()
+				if (dateInfo.value.mes == 12) {
+					dateInfo.value.mes = 1
+					dateInfo.value.year = dateInfo.value.year + 1
+				} else {
+					dateInfo.value.mes = dateInfo.value.mes + 1
+				}
+			}
 		} else {
-			dateInfo.value.mes = dateInfo.value.mes + 1
+			if (dateInfo.value.mes == 12) {
+				dateInfo.value.mes = 1
+				dateInfo.value.year = dateInfo.value.year + 1
+			} else {
+				dateInfo.value.mes = dateInfo.value.mes + 1
+			}
 		}
 	}
 
 	const anterior = () => {
-		if (dateInfo.value.mes == 1) {
-			dateInfo.value.mes = 12
-			dateInfo.value.year = dateInfo.value.year - 1
+		if (!calstore.saved) {
+			let data = confirm('Estas seguro de salir sin guardar')
+			if (data) {
+				calstore.$reset()
+				if (dateInfo.value.mes == 1) {
+					dateInfo.value.mes = 12
+					dateInfo.value.year = dateInfo.value.year - 1
+				} else {
+					dateInfo.value.mes = dateInfo.value.mes - 1
+				}
+			}
 		} else {
-			dateInfo.value.mes = dateInfo.value.mes - 1
+			if (dateInfo.value.mes == 1) {
+				dateInfo.value.mes = 12
+				dateInfo.value.year = dateInfo.value.year - 1
+			} else {
+				dateInfo.value.mes = dateInfo.value.mes - 1
+			}
 		}
 	}
 
@@ -229,6 +265,22 @@
 			isLoading.value = false
 		}
 	})
+
+	onBeforeRouteLeave((to, from, next) => {
+		if (!calstore.saved) {
+			let data = confirm('Estas seguro de salir sin guardar')
+			if (data) {
+				next()
+			}
+		} else {
+			next()
+		}
+	})
+
+	const eliminarRegistroa = async (a: any) => {
+		await EliminarAsistencia(dni.dni, a.fecha)
+		calstore.asistencia = calstore.asistencia.filter((e) => e.fecha !== a.fecha)
+	}
 </script>
 
 <style lang="scss" scoped>

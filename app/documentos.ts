@@ -67,6 +67,29 @@ async function BuscarById(id: string): Promise<Object> {
 	}
 }
 
+async function AnularById(id: string): Promise<Object> {
+	try {
+		const data = await ApiClient.post<Array<any>>('/doc/anular', {
+			docid: id,
+			estado: false,
+		})
+		return data
+	} catch (error) {
+		throw error
+	}
+}
+
+async function EliminarDetalleById(id: string): Promise<Object> {
+	try {
+		const data = await ApiClient.post<Array<any>>('/doc/eliminardetalle', {
+			docid: id,
+		})
+		return data
+	} catch (error) {
+		throw error
+	}
+}
+
 function AbrevAsuntos(asunto: string) {
 	switch (asunto) {
 		case 'JUSTIFICADO':
@@ -146,4 +169,6 @@ export {
 	buscardDetallesDocumentos,
 	buscarDocumentosDNI,
 	BuscarById,
+	AnularById,
+	EliminarDetalleById,
 }

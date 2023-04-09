@@ -58,6 +58,17 @@ async function asistenciaDD(
 	}
 }
 
+async function EliminarAsistencia(dni: string, fecha: string): Promise<void> {
+	try {
+		await ApiClient.post<any>('/asistencia/eliminar', {
+			dni,
+			fecha,
+		})
+	} catch (error) {
+		throw error
+	}
+}
+
 function getMonthName(mes: number) {
 	const monthNames = [
 		'Enero',
@@ -77,4 +88,10 @@ function getMonthName(mes: number) {
 	return monthNames[mes - 1]
 }
 
-export { buscarRegistros, getMonthName, buscarAsistencia, asistenciaDD }
+export {
+	buscarRegistros,
+	getMonthName,
+	buscarAsistencia,
+	asistenciaDD,
+	EliminarAsistencia,
+}

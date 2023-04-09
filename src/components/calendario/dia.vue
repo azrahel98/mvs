@@ -27,14 +27,14 @@
 					{{ ((prop.registro as any).salida as string).substring(0, 5) }}
 				</p>
 			</div>
-			<div class="tardanza" v-if="((prop.registro as any).tardanza) ">
+			<!-- <div class="tardanza" v-if="((prop.registro as any).tardanza) ">
 				<span
 					class="status-dot status-dot-animated bg-warning d-block text-center"
 				/>
 				<p>
 					{{ ((prop.registro as any).tardanza as string).substring(0, 5) }}
 				</p>
-			</div>
+			</div> -->
 		</div>
 		<div class="docs" v-if="docs?.length != 0 || range?.length != 0">
 			<div class="ranges" v-if="prop.range" v-for="r in prop.range">
@@ -116,11 +116,11 @@
 			asitencia.tardanza = null
 			return
 		}
-		store.saved = false
 	}
 
 	const save = () => {
 		asitencia.saved = store.addDayInfo(asitencia)
+		store.saved = false
 	}
 </script>
 <style lang="scss" scoped>
